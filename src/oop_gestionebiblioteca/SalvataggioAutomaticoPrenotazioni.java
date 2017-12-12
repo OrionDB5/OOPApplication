@@ -11,6 +11,9 @@ package oop_gestionebiblioteca;
  * and open the template in the editor.
  */
 
+import oop_gestionebiblioteca.database.DatabaseUtenti;
+import oop_gestionebiblioteca.database.DatabasePrenotazioni;
+import oop_gestionebiblioteca.database.DatabasePostazioni;
 import java.io.*;
 import java.util.*;
 import java.util.logging.Level;

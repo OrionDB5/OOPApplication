@@ -11,6 +11,7 @@ package oop_gestionebiblioteca;
  * and open the template in the editor.
  */
 
+import oop_gestionebiblioteca.database.DatabasePostazioni;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;

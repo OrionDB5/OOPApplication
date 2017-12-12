@@ -82,7 +82,7 @@ public class Utente {
             return false;
         }
         final Utente other = (Utente) obj;
-        if (!Objects.equals(this.matricola, other.matricola)) {
+        if (!Objects.equals(this.matricola, other.getMatricola())) {
             return false;
         }
         return true;

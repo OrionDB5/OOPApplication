@@ -5,8 +5,14 @@
  */
 package oop_gestionebiblioteca;
 
+import oop_gestionebiblioteca.database.DatabaseUtenti;
+import oop_gestionebiblioteca.database.DatabasePrenotazioni;
+import oop_gestionebiblioteca.database.DatabasePostazioni;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import oop_gestionebiblioteca.eccezioni.FasciaNonValidaException;
+import oop_gestionebiblioteca.eccezioni.PostoNonPresenteException;
+import oop_gestionebiblioteca.eccezioni.PostoOccupatoException;
 import oop_gestionebiblioteca.eccezioni.UtentePresenteException;
 
 /**
@@ -33,11 +39,19 @@ public class OOP_GestioneBiblioteca {
         Utente u, u2;
         try {
             u = dbu.aggiungiUtente("Benedetto", "Ginestra", "benedettoginestra@gmail.com", "123456789");
-            Prenotazione p = new Prenotazione(30, 2, u);
-            dbp.inserisciPrenotazione(p);
+            Prenotazione p;
+            try {
+                dbpost.prenotaPosto(1, 1, u);
+                System.out.println(p);
+            } catch (PostoNonPresenteException ex) {
+                System.out.println(ex.getMessage());
+            } catch (FasciaNonValidaException ex) {
+                System.out.println(ex.getMessage());
+            } catch (PostoOccupatoException ex) {
+                System.out.println(ex.getMessage());
+            }
             u2 = dbu.aggiungiUtente("Bernadette", "Wallowiz", "amolawii@gmail.com", "987654321");
-            p = new Prenotazione(10, 2, u2);
-            dbp.inserisciPrenotazione(p);
+            
         } catch (UtentePresenteException ex) {
             Logger.getLogger(OOP_GestioneBiblioteca.class.getName()).log(Level.SEVERE, null, ex);
         }

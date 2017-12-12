@@ -11,10 +11,12 @@ package oop_gestionebiblioteca;
  * and open the template in the editor.
  */
 
+import oop_gestionebiblioteca.database.DatabasePostazioni;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.*;
+
+import oop_gestionebiblioteca.eccezioni.FasciaNonValidaException;
 /**
  *
  * @author Davide
@@ -28,7 +30,7 @@ public class SalvataggioAutomaticoPostazioni implements Runnable {
     
     @Override
     public void run(){
-        
+        int numeroFasce = FasciaOraria.getFasce();
         while(true) 
         {
             synchronized(dbPostazioni) {
@@ -39,20 +41,25 @@ public class SalvataggioAutomaticoPostazioni implements Runnable {
             }
             try {
             BufferedWriter out = new BufferedWriter(new FileWriter("backup_postazioni.txt"));
-            
-                Iterator<Posto> iter_p = dbPostazioni.iterator();
-                while(iter_p.hasNext())
+            boolean[] disponibilità;
+            for(int i = 0 ; i < numeroFasce ; i++)
+            {
+                try
                 {
-                    
-                    Posto p = iter_p.next();
-                    out.write(p.getNumeroPosto() + ";");
-                    for(int i = 0 ; i < FasciaOraria.getFasce() ; i++) {
-                        out.write(p.getDisponibilità(i) ? "1" : "0");
-                        out.write(";");
+                    disponibilità = dbPostazioni.visualizzaPostiDisponibili(i);
+                } catch (FasciaNonValidaException ex) 
+                 {
+                       Logger.getLogger(SalvataggioAutomaticoPostazioni.class.getName()).log(Level.SEVERE, null, ex);
+                       break;
+                 }
+                
+                    for(int j = 0 ; j < disponibilità.length ; j++)
+                    {
+                        out.write(disponibilità[j] ? "0;" : "1;");
                     }
                     out.newLine();
-                    
                 }
+                
                 out.close();
                 
             }

@@ -52,6 +52,7 @@ public class Prenotazione {
         return utente;
     }
     
+    @Override
     public String toString() {
         String ret = "";
         try {
