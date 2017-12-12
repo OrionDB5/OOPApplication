@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package oop_gestionebiblioteca;
+package oop_gestionebiblioteca.database;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -13,6 +13,8 @@ package oop_gestionebiblioteca;
 
 import java.io.Serializable;
 import java.util.*;
+import oop_gestionebiblioteca.Prenotazione;
+import oop_gestionebiblioteca.Utente;
 
 /**
  *
@@ -20,20 +22,26 @@ import java.util.*;
  */
 public class DatabasePrenotazioni implements Serializable {
     private Map<Integer,Prenotazione> m;
-    private static int contatorePrenotazione = 0;
+    private int contatorePrenotazione;
 
     public DatabasePrenotazioni() {
         m = new HashMap<>();
+        contatorePrenotazione = 0;
     }
     
-    public synchronized Prenotazione inserisciPrenotazione () {
-        m.put(p.hashCode(), p);
+    public synchronized Prenotazione inserisciPrenotazione (int numeroPosto, int fasciaOraria, Utente u) {
+        
+        Prenotazione p = new Prenotazione(numeroPosto, fasciaOraria, u, contatorePrenotazione);
+        m.put(contatorePrenotazione, p);
+        contatorePrenotazione++;
         notifyAll();
+        return p;
     }
     
-    public synchronized boolean rimuoviPrenotazione (int p) {
-       if(m.containsKey(p)) {
-           m.get(p).setValidità(false);
+    public synchronized boolean rimuoviPrenotazione (int codicePrenotazione) {
+        
+       if(m.containsKey(codicePrenotazione)) {
+           m.get(codicePrenotazione).setValidità(false);
            notifyAll();
            return true;
        }
@@ -43,7 +51,7 @@ public class DatabasePrenotazioni implements Serializable {
        }
     }
     
-    public synchronized Set<Prenotazione> RicercaPrenotazione(Utente u) {
+    public synchronized Set<Prenotazione> ricercaPrenotazione(Utente u) {
         Set<Integer> keys = m.keySet();
         Set<Prenotazione> prenotazioni = new TreeSet<>();
         for (Integer i : keys) {
@@ -54,7 +62,7 @@ public class DatabasePrenotazioni implements Serializable {
         return prenotazioni;
     }
     
-    public synchronized Set<Prenotazione> RicercaPrenotazione(int codicePrenotazione) {
+    public synchronized Set<Prenotazione> ricercaPrenotazione(int codicePrenotazione) {
         Set<Integer> keys = m.keySet();
         Set<Prenotazione> prenotazioni = new TreeSet<>();
         for (Integer i : keys) {
@@ -65,7 +73,7 @@ public class DatabasePrenotazioni implements Serializable {
         return prenotazioni;
     }
     
-    public synchronized Set<Prenotazione> RicercaPrenotazione(String infoUtente) {
+    public synchronized Set<Prenotazione> ricercaPrenotazione(String infoUtente) {
         Set<Integer> keys = m.keySet();
         Set<Prenotazione> prenotazioni = new TreeSet<>();
         for (Integer i : keys) {
