@@ -3,21 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/SalvataggioAutomaticoPrenotazioni.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/DatabasePrenotazioni.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/DatabaseUtenti.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/Posto.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/Utente.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/eccezioni/FasciaNonValidaException.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/eccezioni/UtenteNonPresenteException.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/DatabasePostazioni.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/Prenotazione.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/OOP_GestioneBiblioteca.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/GestioneBiblioteca_GUI_Login.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/OrologioDiSistema.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/eccezioni/UtentePresenteException.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/SalvataggioAutomaticoPostazioni.java</file>
-            <file>file:/C:/Users/Benedetto/Documents/NetBeansProjects/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/FasciaOraria.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/eccezioni/PrenotazioniInsufficientiException.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/FasciaOraria.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/GestioneBiblioteca_GUI_Login.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/database/DatabasePrenotazioni.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/OOP_GestioneBiblioteca.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/database/DatabasePostazioni.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/database/Database.java</file>
+            <file>file:/D:/GitHub/OOP_GestioneBiblioteca/src/oop_gestionebiblioteca/Prenotazione.java</file>
         </group>
     </open-files>
 </project-private>
