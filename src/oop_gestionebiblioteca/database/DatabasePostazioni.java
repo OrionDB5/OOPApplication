@@ -64,6 +64,9 @@ public class DatabasePostazioni implements Serializable{
          if(numeroPosto <= 0 || numeroPosti < numeroPosto)
             throw new PostoNonPresenteException();
          
+         if (fasciaOraria <= 0 || fasciaOraria > FasciaOraria.getFasce())
+             throw new FasciaNonValidaException();
+         
          mappaDisponibilità[fasciaOraria][numeroPosto] = true;
         
         

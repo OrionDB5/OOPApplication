@@ -41,8 +41,14 @@ public class Prenotazione {
         this.dataPrenotazione = LocalDate.now();
         this.codicePrenotazione = codicePrenotazione;
     }
-    
 
+    public int getNumPosto() {
+        return numPosto;
+    }
+
+    public int getFasciaOraria() {
+        return fasciaOraria;
+    }
 
     public LocalDate getDataPrenotazione() {
         return dataPrenotazione;
