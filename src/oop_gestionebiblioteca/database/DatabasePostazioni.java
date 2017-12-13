@@ -63,7 +63,7 @@ public class DatabasePostazioni implements Serializable{
         return mappaDisponibilità[fasciaOraria][numeroPosto];
     }*/
     
-    public synchronized  void prenotaPosto(int numeroPosto, int fasciaOraria, Utente u)
+    public synchronized  void prenotaPosto(int numeroPosto, int fasciaOraria)
         throws PostoNonPresenteException, FasciaNonValidaException, PostoOccupatoException {
         
         if(numeroPosto < 0 || numeroPosto > this.numeroPosti)

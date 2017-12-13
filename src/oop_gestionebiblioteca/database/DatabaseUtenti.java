@@ -14,6 +14,8 @@ package oop_gestionebiblioteca.database;
 import oop_gestionebiblioteca.eccezioni.*;
 import java.io.Serializable;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import oop_gestionebiblioteca.Utente;
 
 /**
@@ -21,20 +23,27 @@ import oop_gestionebiblioteca.Utente;
  * @author Davide
  */
 public class DatabaseUtenti implements Serializable {
-    private int genmatricola;
+    private int genMatricola;
     private HashMap<Utente, String> utenti;
+    private HashMap<Utente, Integer> prenotazioniEffettuate;
     
     public DatabaseUtenti() {
         utenti = new HashMap<>();
-        genmatricola = 612700000;
+        genMatricola = 612700000;
+        prenotazioniEffettuate = new HashMap<>();
     }
     
     public synchronized Utente aggiungiUtente(String nome, String cognome, String email, String password) throws UtentePresenteException {
-        Utente u = new Utente(nome, cognome, genmatricola++, email);
-        if (utenti.containsKey(u))
-            throw new UtentePresenteException();
         
+        Set<Utente> keys = utenti.keySet();
+        for(Utente u : keys) {
+            if(u.getEmail().equals(email))
+                throw new UtentePresenteException();
+        }
+        
+        Utente u = new Utente(nome, cognome, genMatricola++, email);
         utenti.put(u, password);
+        prenotazioniEffettuate.put(u, 0);
         notifyAll();
         return u;
                 
@@ -46,12 +55,107 @@ public class DatabaseUtenti implements Serializable {
         for (Utente u : keys){
             if (u.getMatricola() == matricola) {
                 utenti.remove(u);
+                prenotazioniEffettuate.remove(u);
                 notifyAll();
                 return;
             }
         }
         throw new UtenteNonPresenteException();
+    }
+    
+    public synchronized boolean possibilePrenotare(int matricola)
+        throws UtenteNonPresenteException {
         
+        Set<Utente> keys = utenti.keySet();
+        
+        for(Utente u: keys)
+        {
+            if(u.getMatricola() == matricola)
+            {
+                return prenotazioniEffettuate.get(u) < Utente.MAX_POSTI_PRENOTABILI;
+            }
+        }
+        
+        throw new UtenteNonPresenteException();
+    }
+    
+    public void cancellaPrenotazioni() {
+        
+        Set<Utente> keys = prenotazioniEffettuate.keySet();
+        
+        for(Utente u : keys)
+        {
+            prenotazioniEffettuate.put(u, 0);
+        }
+    }
+    
+    public void inserisciPrenotazione(int matricola)
+        throws PrenotazioniInsufficientiException, UtenteNonPresenteException {
+        
+        Set<Utente> keys = utenti.keySet();
+        
+        for(Utente u : keys) 
+        {
+            if(u.getMatricola() == matricola) 
+            {
+                int prenotazioni = prenotazioniEffettuate.get(u);
+                if(prenotazioni > Utente.MAX_POSTI_PRENOTABILI)
+                    throw new PrenotazioniInsufficientiException();
+                prenotazioniEffettuate.put(u, prenotazioni + 1);
+                return;
+            }
+        }
+        
+        throw new UtenteNonPresenteException();
+    }
+    
+    public boolean rimuoviPrenotazione(int matricola)
+        throws UtenteNonPresenteException {
+        
+        Set<Utente> keys = utenti.keySet();
+        
+        for(Utente u : keys) 
+        {
+            if(u.getMatricola() == matricola) 
+            {
+                int prenotazioni = prenotazioniEffettuate.get(u);
+                if(prenotazioni <= 0)
+                    return false;
+                
+                prenotazioniEffettuate.put(u, prenotazioni - 1);
+                return true;
+            }
+        }
+        
+        throw new UtenteNonPresenteException();
+    }
+    
+    public static void main(String[] args) {
+        DatabaseUtenti db = new DatabaseUtenti();
+        try {
+            db.aggiungiUtente("b", "g", "jhbpifduhb", "jbfouyb");
+            db.aggiungiUtente("òhbf", "ahfb", "hedgbuey", "lwhdbiytg");
+            try {
+                try {
+                    db.inserisciPrenotazione(612700000);
+                    db.inserisciPrenotazione(612700000);
+                    System.out.println(db.rimuoviPrenotazione(612700000));
+                    System.out.println(db.rimuoviPrenotazione(612700000));
+                    System.out.println(db.rimuoviPrenotazione(612700000));
+                    db.inserisciPrenotazione(612700000);
+                    db.inserisciPrenotazione(612700000);
+                    db.inserisciPrenotazione(612700000);
+                    db.inserisciPrenotazione(612700000);
+                } catch (PrenotazioniInsufficientiException ex) {
+                    System.out.println("Prenotazioni insufficienti.");
+
+                }
+            } catch (UtenteNonPresenteException ex) {
+                Logger.getLogger(DatabaseUtenti.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } catch (UtentePresenteException ex) {
+            Logger.getLogger(DatabaseUtenti.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public synchronized Utente login(String email, String password) 

@@ -38,16 +38,17 @@ public class DatabasePrenotazioni implements Serializable {
         return p;
     }
     
-    public synchronized boolean rimuoviPrenotazione (int codicePrenotazione) {
+    public synchronized Prenotazione rimuoviPrenotazione (int codicePrenotazione) {
         
        if(m.containsKey(codicePrenotazione)) {
-           m.get(codicePrenotazione).setValidità(false);
+           Prenotazione p = m.get(codicePrenotazione);
+           p.setValidità(false);
            notifyAll();
-           return true;
+           return p;
        }
        else {
            notifyAll();
-           return false;
+           return null;
        }
     }
     
@@ -89,6 +90,10 @@ public class DatabasePrenotazioni implements Serializable {
         Iterator<Prenotazione> tmp = m.values().iterator();
         notifyAll();
         return tmp;
+    }
+    
+    public synchronized void reset() {
+        m = new HashMap<>();
     }
     
 }

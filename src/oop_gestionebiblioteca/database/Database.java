@@ -18,6 +18,7 @@ import oop_gestionebiblioteca.eccezioni.FasciaNonValidaException;
 import oop_gestionebiblioteca.eccezioni.PasswordErrataException;
 import oop_gestionebiblioteca.eccezioni.PostoNonPresenteException;
 import oop_gestionebiblioteca.eccezioni.PostoOccupatoException;
+import oop_gestionebiblioteca.eccezioni.PrenotazioniInsufficientiException;
 import oop_gestionebiblioteca.eccezioni.UtenteNonPresenteException;
 import oop_gestionebiblioteca.eccezioni.UtentePresenteException;
 
@@ -51,6 +52,7 @@ public class Database {
         return disponibilità;
     }
     
+    
     /*public synchronized boolean controllaDisponibilitàPosto(int numeroPosto, int fasciaOraria) {
         
         if(numeroPosto <= 0 || posti.size() < numeroPosto)
@@ -60,15 +62,24 @@ public class Database {
     }*/
     
     public synchronized  Prenotazione prenotaPosto(int numeroPosto, int fasciaOraria, Utente u)
-        throws PostoNonPresenteException, FasciaNonValidaException, PostoOccupatoException {
+        throws PostoNonPresenteException, FasciaNonValidaException, PostoOccupatoException, UtenteNonPresenteException, PrenotazioniInsufficientiException {
         
         try {
-            postazioni.prenotaPosto(numeroPosto, fasciaOraria, u);
+            if(utenti.possibilePrenotare(u.getMatricola()))
+            {
+                postazioni.prenotaPosto(numeroPosto, fasciaOraria);
+                utenti.inserisciPrenotazione(u.getMatricola());
+            }
+            
+            else
+                throw new PrenotazioniInsufficientiException();
         } catch (PostoNonPresenteException ex) {
             throw ex;
         } catch (FasciaNonValidaException ex) {
             throw ex;
         } catch (PostoOccupatoException ex) {
+            throw ex;
+        } catch (UtenteNonPresenteException ex) {
             throw ex;
         }
         
@@ -88,11 +99,29 @@ public class Database {
         notifyAll();
     }
     
+    public synchronized void cancellaPrenotazioni() {
+        utenti.cancellaPrenotazioni();
+        notifyAll();
+    }
+    
+    
     public synchronized boolean rimuoviPrenotazione (int codicePrenotazione) {
         
-       boolean ret = prenotazioni.rimuoviPrenotazione(codicePrenotazione);
-       notifyAll();
-       return ret;
+        try {
+            Prenotazione p = prenotazioni.rimuoviPrenotazione(codicePrenotazione);
+            if(p == null)
+            {
+                notifyAll();
+                return false;
+            }
+            
+            utenti.rimuoviPrenotazione(p.getUtente().getMatricola());
+            notifyAll();
+            return true;
+        } catch (UtenteNonPresenteException ex) {
+        }
+        
+        return true;
     }
     
     public synchronized Set<Prenotazione> ricercaPrenotazione(Utente u) {
