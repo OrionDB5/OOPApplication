@@ -12,6 +12,7 @@ package oop_gestionebiblioteca;
  */
 
 import java.util.Objects;
+import oop_gestionebiblioteca.eccezioni.PrenotazioniInsufficientiException;
 
 /**
  *
@@ -23,6 +24,7 @@ public class Utente {
     private String cognome;
     private int matricola;
     private String email;
+    public static final int MAX_POSTI_PRENOTABILI = 2;
 
     public Utente(String nome, String cognome, int matricola, String email) {
         this.nome = nome;
@@ -63,6 +65,8 @@ public class Utente {
         this.email = email;
     }
 
+    
+
     @Override
     public int hashCode() {
         int hash = 7;
@@ -82,15 +86,12 @@ public class Utente {
             return false;
         }
         final Utente other = (Utente) obj;
-        if (!Objects.equals(this.matricola, other.getMatricola())) {
+        if (!Objects.equals(this.matricola, other.getEmail())) {
             return false;
         }
         return true;
     }
-    
-    
-    
-   
+       
     @Override
     public String toString() {
         return "Nome: " + nome + " - Cognome: " + cognome + " - Matricola: " + matricola + " - Email: " + email;
