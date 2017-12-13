@@ -13,10 +13,7 @@ package oop_gestionebiblioteca.database;
 
 import java.io.Serializable;
 import java.util.*;
-import oop_gestionebiblioteca.FasciaOraria;
-import oop_gestionebiblioteca.Posto;
-import oop_gestionebiblioteca.Prenotazione;
-import oop_gestionebiblioteca.Utente;
+import oop_gestionebiblioteca.*;
 import oop_gestionebiblioteca.eccezioni.*;
 
 /**
@@ -25,18 +22,14 @@ import oop_gestionebiblioteca.eccezioni.*;
  */
 public class DatabasePostazioni implements Serializable{
    
-    private SortedSet<Posto> posti;
     private boolean[][] mappaDisponibilità;
     private int numeroPosti;
     
     protected DatabasePostazioni(int numeroPosti) {
         this.numeroPosti = numeroPosti;
-        posti = new TreeSet<>();
         int numeroFasce = FasciaOraria.getFasce();
         mappaDisponibilità = new boolean[numeroFasce][numeroPosti];
         for (int i = 0; i < numeroFasce; i++){
-            posti.add(new Posto(i + 1));
-            
             for(int j = 0 ; j < numeroPosti ; j++)
             {
                 mappaDisponibilità[i][j] = true;
@@ -62,6 +55,19 @@ public class DatabasePostazioni implements Serializable{
         
         return mappaDisponibilità[fasciaOraria][numeroPosto];
     }*/
+    
+    public synchronized void liberaPosto(int numeroPosto, int fasciaOraria)
+        throws PostoNonPresenteException, FasciaNonValidaException {
+         
+        System.out.println("Rimozione prenotazione... fascia oraria... " + fasciaOraria + "... posto... " + numeroPosto);
+
+         if(numeroPosto <= 0 || numeroPosti < numeroPosto)
+            throw new PostoNonPresenteException();
+         
+         mappaDisponibilità[fasciaOraria][numeroPosto] = true;
+        
+        
+    }
     
     public synchronized  void prenotaPosto(int numeroPosto, int fasciaOraria)
         throws PostoNonPresenteException, FasciaNonValidaException, PostoOccupatoException {

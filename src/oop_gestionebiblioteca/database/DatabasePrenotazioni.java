@@ -24,7 +24,7 @@ public class DatabasePrenotazioni implements Serializable {
     private Map<Integer,Prenotazione> m;
     private int contatorePrenotazione;
 
-    public DatabasePrenotazioni() {
+    protected DatabasePrenotazioni() {
         m = new HashMap<>();
         contatorePrenotazione = 0;
     }
@@ -43,6 +43,7 @@ public class DatabasePrenotazioni implements Serializable {
        if(m.containsKey(codicePrenotazione)) {
            Prenotazione p = m.get(codicePrenotazione);
            p.setValidità(false);
+           System.out.println("databasePrenotazioni.rimuoviPrenotazione(" + codicePrenotazione + ")");
            notifyAll();
            return p;
        }

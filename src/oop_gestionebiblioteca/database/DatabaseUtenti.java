@@ -27,13 +27,13 @@ public class DatabaseUtenti implements Serializable {
     private HashMap<Utente, String> utenti;
     private HashMap<Utente, Integer> prenotazioniEffettuate;
     
-    public DatabaseUtenti() {
+    protected DatabaseUtenti() {
         utenti = new HashMap<>();
         genMatricola = 612700000;
         prenotazioniEffettuate = new HashMap<>();
     }
     
-    public synchronized Utente aggiungiUtente(String nome, String cognome, String email, String password) throws UtentePresenteException {
+    public synchronized Utente registraUtente(String nome, String cognome, String email, String password) throws UtentePresenteException {
         
         Set<Utente> keys = utenti.keySet();
         for(Utente u : keys) {
@@ -130,7 +130,7 @@ public class DatabaseUtenti implements Serializable {
         throw new UtenteNonPresenteException();
     }
     
-    public static void main(String[] args) {
+    /*public static void main(String[] args) {
         DatabaseUtenti db = new DatabaseUtenti();
         try {
             db.aggiungiUtente("b", "g", "jhbpifduhb", "jbfouyb");
@@ -156,7 +156,7 @@ public class DatabaseUtenti implements Serializable {
         } catch (UtentePresenteException ex) {
             Logger.getLogger(DatabaseUtenti.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
+    }*/
     
     public synchronized Utente login(String email, String password) 
         throws UtenteNonPresenteException, PasswordErrataException {

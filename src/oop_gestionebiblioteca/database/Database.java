@@ -36,6 +36,9 @@ public class Database {
         utenti = new DatabaseUtenti();
         postazioni = new DatabasePostazioni(50);
         prenotazioni = new DatabasePrenotazioni();
+        Thread tSalvaPostazioni = new Thread(new SalvataggioAutomaticoPostazioni(postazioni));
+        Thread tSalvaPrenotazioni = new Thread(new SalvataggioAutomaticoPrenotazioni(prenotazioni));
+        OrologioDiSistema clock = new OrologioDiSistema(this);
     }
     
     public synchronized boolean [] visualizzaPostiDisponibili(int fasciaOraria)
@@ -105,7 +108,8 @@ public class Database {
     }
     
     
-    public synchronized boolean rimuoviPrenotazione (int codicePrenotazione) {
+    public synchronized boolean rimuoviPrenotazione (int codicePrenotazione) 
+        throws PostoNonPresenteException, FasciaNonValidaException{
         
         try {
             Prenotazione p = prenotazioni.rimuoviPrenotazione(codicePrenotazione);
@@ -115,6 +119,14 @@ public class Database {
                 return false;
             }
             
+            try {
+                postazioni.liberaPosto(p.getNumPosto(), p.getFasciaOraria() );
+            } catch (PostoNonPresenteException ex) {
+                System.out.println("database.rimuoviPrenotazione(" + codicePrenotazione + ") sta lanciando PostoNonPresenteException");
+                throw ex;
+            } catch (FasciaNonValidaException ex) {
+                throw ex;
+            }
             utenti.rimuoviPrenotazione(p.getUtente().getMatricola());
             notifyAll();
             return true;
@@ -151,11 +163,11 @@ public class Database {
         return tmp;
     }
     
-     public synchronized Utente aggiungiUtente(String nome, String cognome, String email, String password) 
+     public synchronized Utente registraUtente(String nome, String cognome, String email, String password) 
              throws UtentePresenteException {
         
         try {
-            Utente u = utenti.aggiungiUtente(nome, cognome, email, password);
+            Utente u = utenti.registraUtente(nome, cognome, email, password);
             notifyAll();
             return u;    
         } catch(UtentePresenteException ex){
@@ -203,7 +215,7 @@ public class Database {
     }
     
     public synchronized String stampaUtenti(){
-       
+        
         String ret = utenti.toString();
         notifyAll();
         return ret;
