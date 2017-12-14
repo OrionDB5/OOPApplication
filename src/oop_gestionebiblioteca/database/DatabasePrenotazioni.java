@@ -80,7 +80,7 @@ public class DatabasePrenotazioni implements Serializable {
      */
     public synchronized Set<Prenotazione> ricercaPrenotazione(Utente u) {
         Set<Integer> keys = m.keySet();
-        Set<Prenotazione> prenotazioni = new TreeSet<>();
+        Set<Prenotazione> prenotazioni = new HashSet<>();
         for (Integer i : keys) {
             if (m.get(i).getUtente().equals(u))
                 prenotazioni.add(m.get(i));
