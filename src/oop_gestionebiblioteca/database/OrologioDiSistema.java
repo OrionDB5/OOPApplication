@@ -37,56 +37,74 @@ public class OrologioDiSistema implements Runnable {
         while(true){
             try {
                 System.out.println("Ore 00:00");
-                Thread.sleep(10000);   // aspetta fino alle 10:30 e poi occupa tutti i posti della prima fascia
+                Thread.sleep(30000);   // aspetta fino alle 10:30 e poi occupa tutti i posti della prima fascia
             } catch (InterruptedException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("Ore 08:30");
+            try {
+                db.setNonModificabile(0);
+            } catch (FasciaNonValidaException ex) {
+                Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            try {
+                Thread.sleep(20000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             try {
                 db.azzeraDisponibilitàPosti(0);
+                db.setNonModificabile(1);
             } catch (FasciaNonValidaException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
                 System.out.println("Ore 10:30");
-                Thread.sleep(10000);
+                Thread.sleep(30000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
             try {
+                db.setNonModificabile(2);
                 db.azzeraDisponibilitàPosti(1);
+                db.setNonModificabile(2);
             } catch (FasciaNonValidaException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             try {
                 System.out.println("Ore 12:30");
-                Thread.sleep(10000);
+                Thread.sleep(30000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             try {
                 db.azzeraDisponibilitàPosti(2);
+                db.setNonModificabile(3);
             } catch (FasciaNonValidaException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             try {
                 System.out.println("Ore 14:30");
-                Thread.sleep(10000);
+                Thread.sleep(30000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             try {
                 db.azzeraDisponibilitàPosti(3);
+                db.setNonModificabile(4);
             } catch (FasciaNonValidaException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }
             
             try {
                 System.out.println("Ore 16:30");
-                Thread.sleep(10000);
+                Thread.sleep(30000);
             } catch (InterruptedException ex) {
                 Logger.getLogger(OrologioDiSistema.class.getName()).log(Level.SEVERE, null, ex);
             }

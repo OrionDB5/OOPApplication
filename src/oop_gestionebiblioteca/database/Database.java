@@ -115,7 +115,8 @@ public class Database {
     
     /**
      * Il metodo rende non prenotabili i posti per una data fascia oraria.
-     * @param fasciaOraria 
+     * @param fasciaOraria La fascia oraria in cui si vogliono rendere occupati tutti i posti,
+     * ossia la fascia oraria in cui non si vogliono permettere ulteriori prenotazioni.
      * @throws FasciaNonValidaException L'eccezione viene lanciata se la fascia oraria non è prevista.
      */
     protected synchronized void azzeraDisponibilitàPosti(int fasciaOraria)
@@ -173,6 +174,9 @@ public class Database {
                 notifyAll();
                 return false;
             }
+            
+            if(! p.isModificabile())
+                return false;
             
             try {
                 postazioni.liberaPosto(p.getNumPosto(), p.getFasciaOraria() );
@@ -235,12 +239,42 @@ public class Database {
         return search_results;
     }
     
+    /**
+     * Il metodo restituisce un iteratore sulle prenotazioni presenti nel database.
+     * @return Un iteratore di prenotazioni.
+     */
     public synchronized Iterator<Prenotazione> iteratorPrenotazioni() {
         Iterator<Prenotazione> tmp = prenotazioni.iterator();
         notifyAll();
         return tmp;
     }
     
+    public synchronized void setNonModificabile(int fasciaOraria)
+        throws FasciaNonValidaException {
+        
+        try {
+            prenotazioni.setNonModificabile(fasciaOraria);
+        } catch (FasciaNonValidaException ex) {
+            throw ex;
+        }
+    }
+    
+    public synchronized Iterator<Utente> iteratorUtenti() {
+        Iterator<Utente> tmp = utenti.iterator();
+        notifyAll();
+        return tmp;
+    }
+    /**
+     * Il metodo consente l'inserimento nel database di un nuovo utente, se questo non è già presente.
+     * L'univocità degli utenti è determinata dall'indirizzo e-mail.
+     * @param nome Nome dell'utente
+     * @param cognome Cognome dell'utente
+     * @param email Indirizzo e-mail dell'utente
+     * @param password Password dell'account utente
+     * @return L'utente creato, comprensivo di nome, cognome, e-mail e matricola.
+     * @throws UtentePresenteException L'eccezione viene lanciata se l'indirizzo e-mail passato come parametro
+     * risulta essere associato già ad un altro utente.
+     */
      public synchronized Utente registraUtente(String nome, String cognome, String email, String password) 
              throws UtentePresenteException {
         
@@ -254,6 +288,12 @@ public class Database {
        
     }
     
+     /**
+      * Il metodo permette la cancellazione di un account utente sulla base della matricola.
+      * @param matricola Matricola dell'utente che si vuole cancellare.
+      * @throws UtenteNonPresenteException  L'eccezione viene lanciata se la matricola non risulta essere associata
+      * ad alcun account utente.
+      */
     public synchronized void rimuoviUtente(int matricola)
             throws UtenteNonPresenteException {
         
@@ -265,6 +305,15 @@ public class Database {
         
     }
     
+    /**
+     * Il metodo mette a disposizione la funzione di login.
+     * @param email E-mail dell'account a cui si vuole accedere.
+     * @param password Password di accesso
+     * @return L'utente associato all'e-mail, se il login è andato a buon fine.
+     * @throws UtenteNonPresenteException L'eccezione viene lanciata se l'indirizzo e-mail non risulta essere
+     * associata ad alcun account utente.
+     * @throws PasswordErrataException L'eccezione viene lanciata se la password non è corretta.
+     */
     public synchronized Utente login(String email, String password) 
         throws UtenteNonPresenteException, PasswordErrataException {
         
@@ -274,16 +323,13 @@ public class Database {
             throw ex;
         } catch(PasswordErrataException ex) {
             throw ex;
-        } finally {
-            // TO DO...
         }
-        
-        
     }
     
     /**
-     *
-     * @return
+     * Il metodo visualizza tutte le prenotazioni presenti nel database, attualmente valide o cancellate che siano.
+     * @return Una stringa con tutte le prenotazioni, stampate secondo il formato specificato dal metodo toString() della
+     * classe Prenotazione.
      */
     public synchronized String stampaPrenotazioni(){
        
@@ -292,6 +338,10 @@ public class Database {
         return ret;
     }
     
+    /**
+     * Il metodo visualizza tutti gli utenti presenti nel database.
+     * @return Una stringa con tutti gli utenti, stampati secondo il formato specificato dal metodo toString()della classe Utente.
+     */
     public synchronized String stampaUtenti(){
         
         String ret = utenti.toString();
