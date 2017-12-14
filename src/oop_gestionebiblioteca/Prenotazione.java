@@ -15,19 +15,24 @@ import oop_gestionebiblioteca.eccezioni.FasciaNonValidaException;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import java.io.Serializable;
 
 /**
  *
- * @author Davide
+ * @author Belgenio Davide
+ * @author Cerchia Giovanni
+ * @author Gabriele Dario
+ * @author Ginestra Benedetto Salvatore
  */
-public class Prenotazione {
+public class Prenotazione implements Serializable{
+
     private int numPosto;
     private int fasciaOraria;
     private final int codicePrenotazione;
     private boolean validità;
     private LocalDate dataPrenotazione;
     private Utente utente;
+    private boolean modificabile;
 
     public int getCodicePrenotazione() {
         return codicePrenotazione;
@@ -38,6 +43,7 @@ public class Prenotazione {
         this.fasciaOraria = fasciaOraria;
         this.utente = utente;
         this.validità = true;
+        this.modificabile = true;
         this.dataPrenotazione = LocalDate.now();
         this.codicePrenotazione = codicePrenotazione;
     }
@@ -50,12 +56,24 @@ public class Prenotazione {
         return fasciaOraria;
     }
 
+    public boolean isValida() {
+        return validità;
+    }
+
     public LocalDate getDataPrenotazione() {
         return dataPrenotazione;
     }
 
     public Utente getUtente() {
         return utente;
+    }   
+    
+    public boolean isModificabile() {
+        return modificabile;
+    }
+    
+    public void setNonModificabile() {
+        modificabile = false;
     }
     
     @Override
@@ -72,9 +90,7 @@ public class Prenotazione {
         return ret;
     }
 
-    public boolean getValidità() {
-        return validità;
-    }
+    
 
     public void setValidità(boolean validità) {
         this.validità = validità;
