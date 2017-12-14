@@ -11,12 +11,9 @@ package oop_gestionebiblioteca.database;
  * and open the template in the editor.
  */
 
-import java.io.*;
-import java.util.*;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import oop_gestionebiblioteca.Prenotazione;
-import oop_gestionebiblioteca.Utente;
 
 /**
  *
@@ -24,45 +21,29 @@ import oop_gestionebiblioteca.Utente;
  */
 public class SalvataggioAutomaticoPrenotazioni implements Runnable {
     private final DatabasePrenotazioni dbPrenotazioni;
-    private final String filename = "backup_prenotazioni.txt";
-
-    public SalvataggioAutomaticoPrenotazioni(DatabasePrenotazioni dbPrenotazioni) {
+    private final String filename;
+    private final SerializzatoreDatabasePrenotazioni sdp;
+    private boolean running = true;
+    
+    public SalvataggioAutomaticoPrenotazioni(DatabasePrenotazioni dbPrenotazioni, String filename) {
         this.dbPrenotazioni = dbPrenotazioni;
+        this.filename = filename;
+        sdp = new SerializzatoreDatabasePrenotazioni(dbPrenotazioni);
     }
     
     @Override
-    public void run(){
-        
-        while(true) 
+    public void run(){   
+        while(running) 
         {
             synchronized(dbPrenotazioni) {
-            try {
-                dbPrenotazioni.wait();
-            } catch (InterruptedException ex) {
-                Logger.getLogger(SalvataggioAutomaticoPrenotazioni.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-            
-                Iterator<Prenotazione> iter_p = dbPrenotazioni.iterator();
-                while(iter_p.hasNext())
-                {
-                    
-                    Prenotazione p = iter_p.next();
-                    Utente u = p.getUtente();
-                    out.write(p.getCodicePrenotazione() + ";" + u.getNome() + ";" + u.getCognome() + ";" + u.getMatricola() + ";" + p.getDataPrenotazione() + ";" + p.getValidità());
+                try {
+                    dbPrenotazioni.wait();
+                } catch (InterruptedException ex) {
+                    Logger.getLogger(SalvataggioAutomaticoPrenotazioni.class.getName()).log(Level.SEVERE, null, ex);
                 }
-                
-                out.close();
-                
-            }
-             catch (IOException ex) {
-            Logger.getLogger(SalvataggioAutomaticoPrenotazioni.class.getName()).log(Level.SEVERE, null, ex);
-             }
+            sdp.salva(filename);
             dbPrenotazioni.notifyAll();
             }
         }
-        
-        
     }
 }

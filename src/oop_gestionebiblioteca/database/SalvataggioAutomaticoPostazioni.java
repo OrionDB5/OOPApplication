@@ -24,15 +24,17 @@ import oop_gestionebiblioteca.eccezioni.FasciaNonValidaException;
  */
 public class SalvataggioAutomaticoPostazioni implements Runnable {
     private final DatabasePostazioni dbPostazioni;
-    private final String filename = "backup_postazioni.txt";
-
-    public SalvataggioAutomaticoPostazioni(DatabasePostazioni dbPostazioni) {
+    private final String filename;
+    private SerializzatoreDatabasePostazioni sdp;
+    
+    public SalvataggioAutomaticoPostazioni(DatabasePostazioni dbPostazioni, String filename) {
         this.dbPostazioni = dbPostazioni;
+        this.filename = filename;
+        sdp = new SerializzatoreDatabasePostazioni(dbPostazioni);
     }
     
     @Override
     public void run(){
-        int numeroFasce = FasciaOraria.getFasce();
         while(true) 
         {
             synchronized(dbPostazioni) {
@@ -41,33 +43,7 @@ public class SalvataggioAutomaticoPostazioni implements Runnable {
             } catch (InterruptedException ex) {
                 Logger.getLogger(SalvataggioAutomaticoPostazioni.class.getName()).log(Level.SEVERE, null, ex);
             }
-            try {
-            BufferedWriter out = new BufferedWriter(new FileWriter(filename));
-            boolean[] disponibilità;
-            for(int i = 0 ; i < numeroFasce ; i++)
-            {
-                try
-                {
-                    disponibilità = dbPostazioni.visualizzaPostiDisponibili(i);
-                } catch (FasciaNonValidaException ex) 
-                 {
-                       Logger.getLogger(SalvataggioAutomaticoPostazioni.class.getName()).log(Level.SEVERE, null, ex);
-                       break;
-                 }
-                
-                    for(int j = 0 ; j < disponibilità.length ; j++)
-                    {
-                        out.write(disponibilità[j] ? "0;" : "1;");
-                    }
-                    out.newLine();
-                }
-                
-                out.close();
-                
-            }
-             catch (IOException ex) {
-            Logger.getLogger(SalvataggioAutomaticoPostazioni.class.getName()).log(Level.SEVERE, null, ex);
-             }
+            sdp.salva(filename);
             dbPostazioni.notifyAll();
             }
         }

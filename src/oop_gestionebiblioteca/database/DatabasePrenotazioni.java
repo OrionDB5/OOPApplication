@@ -64,15 +64,14 @@ public class DatabasePrenotazioni implements Serializable {
         return prenotazioni;
     }
     
-    public synchronized Set<Prenotazione> ricercaPrenotazione(int codicePrenotazione) {
+    public synchronized Prenotazione ricercaPrenotazione(int codicePrenotazione) {
         Set<Integer> keys = m.keySet();
-        Set<Prenotazione> prenotazioni = new TreeSet<>();
         for (Integer i : keys) {
             if (i.equals(codicePrenotazione))
-                prenotazioni.add(m.get(i));
+                return m.get(i);
         }
         notifyAll();
-        return prenotazioni;
+        return null;
     }
     
     public synchronized Set<Prenotazione> ricercaPrenotazione(String infoUtente) {
@@ -95,6 +94,7 @@ public class DatabasePrenotazioni implements Serializable {
     
     public synchronized void reset() {
         m = new HashMap<>();
+        contatorePrenotazione = 0;
     }
     
 }
