@@ -35,6 +35,7 @@ public class Database {
     private Thread tSalvaPrenotazioni;
     private final String filenameBackupPrenotazioni = "backup_prenotazioni.txt";
     private final String filenameBackupPostazioni = "backup_postazioni.txt";
+    private String PASSWORD_ADMIN = "oop2017";
     
     /**
      * Crea un database che permette la gestione di utenti, prenotazioni e postazioni.
@@ -54,6 +55,31 @@ public class Database {
         clock.start();
     }
     
+    /**
+     * Il metodo fornisce le credenziali per poter accedere all'area amministrativa del database.
+     * @param passwordAdmin La password dell'amministratore.
+     * @throws PasswordErrataException L'eccezione viene lanciata se la password non corrisponde a quella impostata
+     * per l'account amministratore.
+     */
+    public void accessoAdmin(String passwordAdmin) 
+        throws PasswordErrataException {
+        if(! passwordAdmin.equals(PASSWORD_ADMIN))
+            throw new PasswordErrataException();
+    }
+    
+    /**
+     * Il metodo permette di cambiare le credenziali di accesso all'area amministrativa.
+     * @param passwordAttuale La password attuale, per un controllo di identificazione.
+     * @param passwordNuova La nuova password.
+     * @throws PasswordErrataException L'eccezione viene lanciata se la passwordAttuale passata come riferimento
+     * non corrisponde alla password attuale per accedere all'area amministrativa.
+     */
+    public void cambiaCodiceAdmin(String passwordAttuale, String passwordNuova)
+        throws PasswordErrataException {
+        if(! passwordAttuale.equals(PASSWORD_ADMIN))
+            throw new PasswordErrataException();
+        PASSWORD_ADMIN = passwordNuova;
+    }
     /**
      * Fornisce una panoramica dei posti disponibili per una data fascia oraria,
      * se questa risulta esssere valida.
@@ -122,7 +148,7 @@ public class Database {
     protected synchronized void azzeraDisponibilitàPosti(int fasciaOraria)
         throws FasciaNonValidaException {
         
-        if(! FasciaOraria.isValida(fasciaOraria))
+        if(fasciaOraria < 0 || fasciaOraria >= FasciaOraria.getFasce())
             throw new FasciaNonValidaException();
         postazioni.azzeraDisponibilità(fasciaOraria);
         notifyAll();
@@ -232,7 +258,7 @@ public class Database {
      * @param infoUtente Parametro di ricerca - può essere il nome, il cognome o la matricola dell'utente.
      * @return Un set di prenotazioni associate agli utenti che rispettano i parametri di ricerca.
      */
-    public synchronized Set<Prenotazione> RicercaPrenotazione(String infoUtente) {
+    public synchronized Set<Prenotazione> ricercaPrenotazione(String infoUtente) {
         
         Set<Prenotazione> search_results = prenotazioni.ricercaPrenotazione(infoUtente);
         notifyAll();

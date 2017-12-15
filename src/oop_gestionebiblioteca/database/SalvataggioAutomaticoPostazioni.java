@@ -27,6 +27,11 @@ public class SalvataggioAutomaticoPostazioni implements Runnable {
     private final String filename;
     private SerializzatoreDatabasePostazioni sdp;
     
+    /**
+     * Crea un thread per il salvataggio automatico del database delle postazioni.
+     * @param dbPostazioni Database delle postazioni che si vuole salvare.
+     * @param filename File su cui si vuole salvare il database.
+     */
     public SalvataggioAutomaticoPostazioni(DatabasePostazioni dbPostazioni, String filename) {
         this.dbPostazioni = dbPostazioni;
         this.filename = filename;

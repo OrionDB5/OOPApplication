@@ -25,6 +25,11 @@ public class SalvataggioAutomaticoPrenotazioni implements Runnable {
     private final SerializzatoreDatabasePrenotazioni sdp;
     private boolean running = true;
     
+    /**
+     * Crea un thread per il salvataggio automatico del database delle prenotazioni.
+     * @param dbPrenotazioni Database delle prenotazioni che si vuole salvare.
+     * @param filename File su cui si vuole salvare il database.
+     */
     public SalvataggioAutomaticoPrenotazioni(DatabasePrenotazioni dbPrenotazioni, String filename) {
         this.dbPrenotazioni = dbPrenotazioni;
         this.filename = filename;

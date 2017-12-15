@@ -40,7 +40,7 @@ public class SerializzatoreDatabasePrenotazioni {
                             + u.getCognome() + ";"
                             + u.getMatricola() + ";" 
                             + p.getDataPrenotazione() 
-                            + ";" + p.getValidità() + ";");
+                            + ";" + p.isValida() + ";");
                     out.newLine();
                 }
                 

@@ -112,11 +112,14 @@ public class DatabasePrenotazioni implements Serializable {
      */
     public synchronized Set<Prenotazione> ricercaPrenotazione(String infoUtente) {
         Set<Integer> keys = m.keySet();
-        Set<Prenotazione> prenotazioni = new TreeSet<>();
+        Set<Prenotazione> prenotazioni = new HashSet<>();
         for (Integer i : keys) {
             Utente u = m.get(i).getUtente();
-            if (u.getCognome().equalsIgnoreCase(infoUtente) || u.getNome().equalsIgnoreCase(infoUtente) || u.getMatricola() == Integer.parseInt(infoUtente))
+            if (u.getCognome().equalsIgnoreCase(infoUtente) || u.getNome().equalsIgnoreCase(infoUtente))
                 prenotazioni.add(m.get(i));
+            else if(infoUtente.matches("[0-9]+"))
+                if(Integer.parseInt(infoUtente) == u.getMatricola())
+                    prenotazioni.add(m.get(i));
         }
         notifyAll();
         return prenotazioni;
